@@ -1,0 +1,78 @@
+version: 2
+
+models:
+  - name: stg_accounts
+    description: Cleaned and standardized account records from raw_accounts
+    columns:
+      - name: account_id
+        description: Unique identifier for each account
+        tests:
+          - unique
+          - not_null
+      - name: plan
+        description: Subscription plan tier
+        tests:
+          - accepted_values:
+              values: ['starter', 'growth', 'enterprise']
+      - name: account_status
+        description: Current status of the account
+        tests:
+          - accepted_values:
+              values: ['active', 'churned']
+      - name: mrr
+        description: Monthly recurring revenue for this account
+        tests:
+          - not_null
+
+  - name: stg_users
+    description: Cleaned and standardized user records from raw_users
+    columns:
+      - name: user_id
+        description: Unique identifier for each user
+        tests:
+          - unique
+          - not_null
+      - name: account_id
+        description: Foreign key to stg_accounts
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_accounts')
+              field: account_id
+      - name: role
+        description: User role within their account
+        tests:
+          - accepted_values:
+              values: ['admin', 'member', 'viewer']
+
+  - name: stg_events
+    description: Cleaned and standardized event records from raw_events
+    columns:
+      - name: event_id
+        description: Unique identifier for each event
+        tests:
+          - unique
+          - not_null
+      - name: user_id
+        description: Foreign key to stg_users
+        tests:
+          - not_null
+      - name: event_category
+        description: High level category of the event
+        tests:
+          - accepted_values:
+              values: ['core_action', 'reporting', 'collaboration', 'other']
+
+  - name: stg_subscriptions
+    description: Cleaned and standardized subscription records
+    columns:
+      - name: subscription_id
+        description: Unique identifier for each subscription
+        tests:
+          - unique
+          - not_null
+      - name: status
+        description: Current subscription status
+        tests:
+          - accepted_values:
+              values: ['active', 'churned']

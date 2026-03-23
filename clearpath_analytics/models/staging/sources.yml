@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: clearpath
+    description: Raw Clearpath SaaS application data
+    schema: main
+    tables:
+      - name: raw_accounts
+        description: B2B customer accounts using Clearpath
+      - name: raw_users
+        description: Individual users within each account
+      - name: raw_events
+        description: User activity events within the platform
+      - name: raw_subscriptions
+        description: Subscription and billing records per account
